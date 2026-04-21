@@ -140,7 +140,7 @@ footer { text-align:center; padding:40px; font-family:'Special Elite'; font-size
     </div>
     <iframe id="himno-frame" 
             src="" 
-            data-src="https://drive.google.com/file/d/1Dq56Mh-sW5m0pY52P9G2Y9G2Y9G2Y9G2/preview?autoplay=1" 
+            data-src="https://drive.google.com/file/d/1Dq56Mh-sW5m0pY52P9G2Y9G2Y9G2Y9G2/preview" 
             style="display:none"></iframe>
   </div>
 </header>
@@ -222,7 +222,7 @@ function toggleHimno() {
   const tiempo = document.getElementById('himno-tiempo');
 
   if (!himnoActivo) {
-    // Si el src está vacío, cargamos la URL desde data-src
+    // CORRECCIÓN: Si el src está vacío, le asignamos la URL de data-src para que empiece a sonar
     if (frame.src === "" || frame.src === window.location.href) {
       frame.src = frame.getAttribute('data-src');
     }
@@ -231,13 +231,12 @@ function toggleHimno() {
     himnoActivo = true;
     tiempo.textContent = 'Reproduciendo...';
     
-    // Simulación de barra de progreso
     frame._interval = setInterval(() => {
       p = (p + 0.05) % 100;
       fill.style.width = p + '%';
     }, 300);
   } else {
-    // Pausar recargando con src vacío
+    // Detenemos el audio limpiando el src
     frame.src = '';
     btn.textContent = '▶';
     himnoActivo = false;
@@ -260,20 +259,15 @@ function cerrarLightbox() {
   document.getElementById('lightbox').classList.remove('activo');
 }
 
-document.addEventListener('keydown', e => { 
-  if(e.key==='Escape') cerrarLightbox(); 
-});
+document.addEventListener('keydown', e => { if(e.key==='Escape') cerrarLightbox(); });
 
-// Anclas de audio — abre el acordeón y hace scroll al audio concreto
 window.addEventListener('load', () => {
   const hash = window.location.hash; 
   if (!hash) return;
   const target = document.querySelector(hash);
   if (!target) return;
-  
   const card = target.closest('.dia-card');
   if (card) card.classList.add('abierta');
-  
   setTimeout(() => {
     target.scrollIntoView({ behavior: 'smooth' });
   }, 500);
